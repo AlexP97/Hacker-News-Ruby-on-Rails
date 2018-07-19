@@ -1,0 +1,58 @@
+<div class="comment_list" style="font-size:12px">
+  <% @comments.each do |comment| %>
+    
+    <div style="padding-top:20px; font-size:10px"> 
+        <a style="text-decoration:none;" href="<%= upvote_comment_path(comment)%>">▲</a>
+        <font color="828282"><%= comment.user.first_name %>
+        <%= time_ago_in_words(comment.created_at) %>
+        <%= comment.votes_for.size %> points
+        </font> <br>
+    </div>
+    
+    <div style="padding-left:15px; padding-top:5px"> 
+        <font color="000000"><%= comment.comment %></font> <br>
+    </div>
+
+    <div style="padding-left:15px; padding-top:5px"> 
+        <font color="000000" size="1"><a href="/comments/<%=comment.id%>">reply</a>
+        |
+        <a style="text-decoration:none;" href="<%= unvote_comment_path(comment)%>">unvote</a>
+        </font>
+    
+        <% if current_user %>
+            <% if current_user.id == comment.user_id.to_i %>
+              |
+              <%= button_to 'Delete', comment_path(comment), method: :delete %>
+            <% end %>
+            <% end %>
+    </div>
+    
+    <% comment.comments.each do |reply| %>
+    
+    <div style="padding-left:40px; padding-top:10px; font-size:10px"> 
+        <a style="text-decoration:none;" href="<%= upvote_comment_path(reply)%>">▲</a>
+        <font color="828282"><%= reply.user.first_name %>
+        <%= time_ago_in_words(comment.created_at) %>
+        <%= reply.votes_for.size %> points
+        </font> <br>
+    </div>
+      
+      <div style="padding-left:40px; padding-top:5px">
+         <font color="000000"><%= reply.comment %></font> <br>
+      </div>
+    <div style="padding-left:40px; padding-top:5px"> 
+        <font color="000000" size="1">
+        <a style="text-decoration:none;" href="<%= unvote_comment_path(reply)%>">unvote</a>
+        </font>
+   
+        <% if current_user %>
+            <% if current_user.id == reply.user_id.to_i %>
+              |
+              <%= button_to 'Delete', comment_path(reply), method: :delete %>
+            <% end %>
+            <% end %>
+    </div>
+        
+    <% end %>
+  <% end %>
+</div>

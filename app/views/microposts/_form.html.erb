@@ -1,0 +1,47 @@
+<%= form_with(model: micropost, local: true) do |form| %>
+  <% if micropost.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(micropost.errors.count, "error") %> prohibited this micropost from being saved:</h2>
+
+      <ul>
+      <% micropost.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><%= form.label :title %></td>
+        <td><%= form.text_field :title, id: :micropost_title %></td>
+      </tr>
+      <tr>
+        <td><%= form.label :url %></td>
+        <td><%= form.text_field :url, id: :micropost_url %></td>
+      </tr>
+      <tr>
+        <td style="width:30px;"></td>
+        <td><font color="#828282"><b>or</b></font></td>
+      </tr>
+      <tr>
+        <td><%= form.label :text %></td>
+        <td><%= form.text_area :text, id: :micropost_text %></td>
+      </tr>
+      <tr>
+        <td style="width:28px;"></td>
+        <td><%= form.submit %></td><td></td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="message">
+    <font color="#828282">
+    <table border="0" cellpadding="0" cellspacing="0">
+    <td style="width:30px;"></td>
+    <td>Leave url blank to submit a question for discussion. If there is no url, the text (if any) will appear at the top of the thread.</td>
+    </table>
+    </font>
+  </div>
+<% end %>

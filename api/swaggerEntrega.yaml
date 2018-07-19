@@ -1,0 +1,440 @@
+swagger: '2.0'
+info:
+  description: >-
+    This is a sample Hacker News server.
+  version: 1.0.0
+  title: Hacker News
+  contact:
+    email: adrian.espejo@est.fib.upc.edu
+host: hackernews2018.herokuapp.com
+basePath: /
+tags:
+  - name: micropost
+    description: Everything about the microposts
+  - name: comment
+    description: Access to microposts comments
+  - name: user
+    description: Operations about user
+schemes:
+  - https
+paths:
+  /microposts:
+    get:
+      tags:
+        - micropost
+      summary: Get all microposts with url
+      description: >-
+        Get all microposts that their url field is not empty ordered by creation
+        time.
+      operationId: getAllMicropostsWithUrl
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Micropost'
+        '400':
+          description: Bad request
+    post:
+      tags:
+        - micropost
+      summary: Add a new micropost
+      description: >-
+        Create a new Micropost. It has to have either an url or a text. Allows
+        duplicate titles but not duplicated urls.
+      operationId: addMicropost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Micropost object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/Micropost'
+      responses:
+        '405':
+          description: Invalid input
+  /new/show:
+    get:
+      tags:
+        - micropost
+      summary: Get all microposts
+      description: Get all microposts ordered by creation time.
+      operationId: getAllMicroposts
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Micropost'
+        '400':
+          description: Bad request
+  /ask/show:
+    get:
+      tags:
+        - micropost
+      summary: Get all ask microposts
+      description: Get all ask microposts ordered by creation time.
+      operationId: getAllAskMicroposts
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Micropost'
+        '400':
+          description: Bad request
+  '/microposts/{micropost_id}':
+    get:
+      tags:
+        - micropost
+      summary: Get micropost by micropost id
+      description: Returns a micropost based on the ID supplied.
+      operationId: getMicropostById
+      produces:
+        - application/json
+      parameters:
+        - name: micropost_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Micropost'
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: Micropost not found
+    put:
+      tags:
+        - micropost
+      summary: Updates a micropost
+      description: >-
+        Updates a micropost based on the id supplied in the database with form
+        data
+      operationId: updateMicropostWithForm
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: micropost_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - micropost
+      summary: Deletes a micropost
+      description: >-
+        Deletes a single micropost based on the id supplied, if the user created
+        this micropost.
+      operationId: deleteMicropost
+      produces:
+        - application/json
+      parameters:
+        - name: micropost_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Micropost not found
+  '/microposts/{micropost_id}/upvote':
+    post:
+      tags:
+        - micropost
+      summary: Upvote a micropost
+      description: >-
+        Creates a vote on a micropost based on the id supplied and the current
+        user, does not allow duplicates.
+      operationId: upvoteMicropost
+      produces:
+        - application/json
+      parameters:
+        - name: micropost_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Micropost not found
+  '/microposts/{micropost_id}/unvote':
+    delete:
+      tags:
+        - micropost
+      summary: Unvotes a micropost
+      description: >-
+        Deletes a vote of the current user on the micropost based on the id
+        supplied, only if this exists.
+      operationId: unvoteMicropost
+      produces:
+        - application/json
+      parameters:
+        - name: micropost_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Micropost not found
+  /comments/create:
+    post:
+      tags:
+        - comment
+      summary: Add a new comment to the micropost
+      description: Adds a new comment to the current micropost
+      operationId: addComment
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: Comment object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/CommentPost'
+      responses:
+        '405':
+          description: Invalid input
+  '/comments/{comment_id}':
+    delete:
+      tags:
+        - comment
+      summary: Deletes a comment
+      description: Deletes a comment based on the ID supplied.
+      operationId: deleteComment
+      produces:
+        - application/json
+      parameters:
+        - name: comment_id
+          in: path
+          description: Comment id to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Comment not found
+    get:
+      tags:
+        - comment
+      summary: Find comments by ID
+      description: Returns a single comment
+      operationId: getCommentById
+      produces:
+        - application/json
+      parameters:
+        - name: comment_id
+          in: path
+          description: ID of comment to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Comment'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Comment not found
+  '/comments/{comment_id}/upvote':
+    post:
+      tags:
+        - comment
+      summary: Upvote a comment
+      description: >-
+        Creates a vote on a comment based on the id supplied and the current
+        user, does not allow duplicates.
+      operationId: upvoteComment
+      produces:
+        - application/json
+      parameters:
+        - name: comment_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Comment not found
+  '/comments/{comment_id}/unvote':
+    delete:
+      tags:
+        - comment
+      summary: Unvotes a comment
+      description: >-
+        Deletes a vote of the current user on the comment based on the id
+        supplied, only if this exists.
+      operationId: unvoteComment
+      produces:
+        - application/json
+      parameters:
+        - name: comment_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Comment not found
+  '/user/{user_id}':
+    get:
+      tags:
+        - user
+      summary: Get user by user id
+      description: Returns a user based on the ID supplied.
+      operationId: getUserById
+      produces:
+        - application/json
+      parameters:
+        - name: user_id
+          in: path
+          description: 'The id that needs to be fetched. Use 1 for testing. '
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - user
+      summary: Updated user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      produces:
+        - application/json
+      parameters:
+        - name: user_id
+          in: path
+          description: name that need to be updated
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Updated user object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+
+
+definitions:
+  Micropost:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      title:
+        type: string
+      url:
+        type: string
+      text:
+        type: string
+      user_name:
+        type: string
+      user_id:
+        type: string
+      created_at:
+        type: string
+      n_votes:
+        type: integer
+        format: int64
+  Comment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      title:
+        type: string
+      comment:
+        type: string
+      commentable:
+        type: object
+      user:
+        type: object
+      created_at:
+        type: string
+      updated_at:
+        type: string
+  CommentPost:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      comment:
+        type: string
+        example: Comment created via api
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      provider:
+        type: string
+      uid:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      picture:
+        type: string
+      created_at:
+        type: string
+      updated_at:
+        type: string
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'

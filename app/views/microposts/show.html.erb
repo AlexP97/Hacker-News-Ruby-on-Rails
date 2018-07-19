@@ -1,0 +1,123 @@
+<center>
+  <table id="hnmain" border="0" cellpadding="0" cellspacing ="0" width="87%" bgcolor="#f6f6ef">
+    <tbody>
+        <tr bgcolor=#ff6600>
+          <td>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px;" bgcolor=#ff6600>
+              <tbody>
+                  <td style="width:18px;height:18px;padding-right:4px;">
+                    <a href="/">
+                      <img src="https://news.ycombinator.com/y18.gif" width="18" height="18" style="border:1px white solid;">
+                    </a>
+                  </td>
+                  <td>
+                    <span class="pagetop">
+                      <b class="hnname">
+                        <a style="text-decoration:none;" href="/">Hacker News</a>
+                      </b>
+                      <a style="text-decoration:none; padding-left:5px;" href="/new/show">new</a>
+                      |
+                      <a style="text-decoration:none;" href="/">threads</a>
+                      |
+                      <a>comments</a>
+                      |
+                      <a>show</a>
+                      |
+                      <a style="text-decoration:none;" href="<%= ask_show_path(format: :html) %>">ask</a>
+                      |
+                      <a>jobs</a>
+                      |
+                      <% if user_signed_in? %>
+                        <a style="text-decoration:none;" href="<%= new_micropost_path(format: :html) %>">submit</a>       
+                      <% else %>
+                        <a style="text-decoration:none;" href="/auth/google_oauth2">submit</a> 
+                      <% end %>
+                    </span>
+                  </td>
+                  <td style="height:18px;text-align:right;padding-right:4px;">
+                    <span class="pagetop">
+                     <% if user_signed_in? %>
+                        <a style="text-decoration:none;" href="/me"><%=current_user.first_name%></a>
+                        |
+                        <a style="text-decoration:none;" href="/logout"> Logout </a>
+                      <% else %>
+                        <a style="text-decoration:none;" href="/auth/google_oauth2">Sign in with Google</a>
+                      <% end %>     
+                  </span>
+                  </td>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr style="height:10px"></tr>
+        <tr>
+        <td>
+          <font color="#828282">
+           <table border="0" cellpadding="0" cellspacing="0" class="itemlist">
+            <tbody>
+              <tr>
+                <td class="votelinks">
+                  
+                  <a style="text-decoration:none;" href="<%= upvote_micropost_path(@micropost)%>">▲</a>
+
+                  <% if @micropost.url != "" %>
+                  <% if @micropost.url.include? "https://" or @micropost.url.include? "http://" %>
+                    <a style="text-decoration:none;" href="<%= @micropost.url %>"><%= @micropost.title %></a>
+                        <span class="sitebit comhead">
+                          <font color="#828282" size="1px">
+                            (<a style="text-decoration:none;" href="<%= @micropost.url %>"><%= @micropost.url %></a>)
+                          </font>
+                        </span>
+                    <%else%>
+                    <a style="text-decoration:none;" href="http://<%= @micropost.url %>"><%= @micropost.title %></a>
+                        <span class="sitebit comhead">
+                          <font color="#828282" size="1px">
+                            (<a style="text-decoration:none;" href="http://<%= @micropost.url %>"><%= @micropost.url %></a>)
+                            </font>
+                        </span>
+                    <%end%>
+                  </span>
+                  <% else %>
+                  <%= @micropost.title %>
+                  <% end %>
+                </td>
+              </tr>
+              <tr>
+                <td class="subtext" style="font-size:10px">
+                  
+                  <%= @micropost.votes_for.size %> points by <%= @micropost.user_name %>
+                  <span class="age">
+                    <%= @micropost.created_at %>
+                  </span>
+                  |
+                  <a>hide</a>
+                  |
+                  <a style="text-decoration:none;" href="/microposts/<%= @micropost.id %>"><%= @micropost.comments.size %> comments</a>
+                  |
+                  <a style="text-decoration:none;" href="<%= unvote_micropost_path(@micropost)%>">unvote</a>
+                  <% if current_user %>
+                  <% if current_user.id == @micropost.user_id.to_i %>
+                    |
+                    <%= button_to 'Delete', micropost_path(@micropost), method: :delete %>
+                  <% end %>
+                  <% end %>
+                </td>
+              </tr>
+              <tr style="height:10px"></tr>
+              <tr>
+                <td>
+                  <%= @micropost.text %>
+                </td>
+              </tr>
+              <tr style="height:10px"></tr>
+              <tr>
+                <td>
+                  <%= render partial: "comments/template" %>
+                </td>
+              </tr>
+            </tbody> 
+          </table>
+          </font>
+    </tbody>
+  </table>
+</center>

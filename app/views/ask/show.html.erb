@@ -1,0 +1,105 @@
+<p id="notice"><%= notice %></p>
+
+<center>
+  <table id="hnmain" border="0" cellpadding="0" cellspacing = "0" width="87%" bgcolor="#f6f6ef">
+    <tbody>
+      <tr>
+        <td bgcolor=#ff6600>
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px;">
+            <tbody>
+              <tr>
+                <td style="width:18px;padding-right:4px;">
+                  <a href="/">
+                    <img src="https://news.ycombinator.com/y18.gif" width="18" height="18" style="border:1px white solid;">
+                  </a>
+                </td>
+                <td style="line-height:12pt; height:10px;">
+                  <span class="pagetop">
+                    <b class="hnname">
+                      <a style="text-decoration:none;" href="/">Hacker News </a>
+                    </b>
+                    <a style="text-decoration:none; padding-left:5px;" href="/new/show">new</a>
+                    |
+                    <a style="text-decoration:none;" href="/threads/show">threads</a>
+                    |
+                    <a>comments</a>
+                    |
+                    <a>show</a>
+                    |
+                    <a style="text-decoration:none;" href="/ask/show">ask</a>
+                    |
+                    <a>jobs</a>
+                    |
+                    <% if user_signed_in? %>
+                      <a style="text-decoration:none;" href="/microposts/new">submit</a>         
+                    <% else %>
+                      <a style="text-decoration:none;" href="/auth/google_oauth2">submit</a> 
+                    <% end %>
+                  </span>
+                </td>
+                <td style="text-align:right;padding-right:4px;">
+                  <span class="pagetop">
+                     <% if user_signed_in? %>
+                        <a style="text-decoration:none;" href="/me"><%=current_user.first_name%></a>
+                        |
+                        <a style="text-decoration:none;" href="/logout"> Logout </a>
+                      <% else %>
+                        <a style="text-decoration:none;" href="/auth/google_oauth2">Sign in with Google</a>
+                      <% end %>     
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr style="height:10px"></tr>
+      <tr>
+        <td>
+          <table border="0" cellpadding="0" cellspacing="0" class="itemlist">
+            <tbody>
+              <% @microposts.each do |micropost| %>
+                  <%# if micropost.url == "" %>
+                  <tr>
+                    <td valign="top" class="votelinks">
+                        
+                        <a style="text-decoration:none;" href="<%= upvote_micropost_path(micropost)%>">▲</a>
+                        
+                        <a style="text-decoration:none;" href="/microposts/<%= micropost.id %>"><%= micropost.title %></a>
+                        
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="subtext" style="font-size:10px">
+                      <%= micropost.votes_for.size %>  points by <%= micropost.user_name %>
+                      <span class="age">
+                        <%= micropost.created_at %>
+                      </span>
+                      |
+                      <a>hide</a>
+                      |
+                      <a style="text-decoration:none;" href="/microposts/<%= micropost.id %>"><%= micropost.comments.size %> comments</a>
+                      |
+                      <a style="text-decoration:none;" href="<%= unvote_micropost_path(micropost)%>">unvote</a>
+                      <% if current_user %>
+                      <% if current_user.id == micropost.user_id.to_i %>
+                        |
+                        <%= button_to 'Delete', micropost_path(micropost), method: :delete %>
+                      <% end %>
+                      <% end %>
+                      <%# end %>
+                    </td>
+                  </tr>
+                  <tr class="spacer" style="height:5px"></tr>
+              <% end %>
+            </tbody> 
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</center>
+
+<br>
+
+

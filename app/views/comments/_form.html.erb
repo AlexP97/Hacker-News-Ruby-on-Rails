@@ -1,0 +1,11 @@
+
+<%= form_tag create_comment_path(@micropost), method: "post" do %>
+  <%= hidden_field_tag "id", @micropost.id %> 
+    <div class="comment-section">
+      <%= text_area_tag :comment %>
+    </div>
+    <div>
+       <%= submit_tag "add comment" %>
+    </div>
+  <% end %>
+                     

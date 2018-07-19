@@ -1,0 +1,1 @@
+json.array! @microposts, :id, :title, :url, :text, :created_at, :updated_at

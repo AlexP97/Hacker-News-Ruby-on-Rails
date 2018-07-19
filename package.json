@@ -1,0 +1,7 @@
+{
+  "name": "google-omniauth-tutorial",
+  "private": true,
+  "dependencies": {
+    "cli-engine-command": "^9.0.7"
+  }
+}

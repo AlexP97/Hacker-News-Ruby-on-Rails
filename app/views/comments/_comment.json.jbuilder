@@ -1,0 +1,1 @@
+json.extract! comment, :id, :title, :comment, :commentable, :user, :created_at, :updated_at
